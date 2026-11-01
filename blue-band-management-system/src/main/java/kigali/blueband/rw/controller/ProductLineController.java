@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +23,11 @@ import kigali.blueband.rw.service.ProductLineService;
 @RequestMapping(value = "/api/product-lines")
 public class ProductLineController {
 
-    @Autowired
-    private ProductLineService productLineService;
+    private final ProductLineService productLineService;
+
+    public ProductLineController(ProductLineService productLineService) {
+        this.productLineService = productLineService;
+    }
 
     // Saves a new product line.
     @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_VALUE,

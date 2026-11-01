@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -16,8 +15,11 @@ import kigali.blueband.rw.repository.ProductLineRepository;
 @Service
 public class ProductLineService {
 
-    @Autowired
-    private ProductLineRepository productLineRepo;
+    private final ProductLineRepository productLineRepo;
+
+    public ProductLineService(ProductLineRepository productLineRepo) {
+        this.productLineRepo = productLineRepo;
+    }
 
     // Saves a new product line.
     public String saveProductLine(ProductLine productLine) {
@@ -53,7 +55,7 @@ public class ProductLineService {
         return "Product line updated successfully";
     }
 
-    // Deletes a product line and removes it from the distributors first.
+    // Deletes a product line after unlinking it from its distributors.
     @Transactional
     public String deleteProductLine(UUID id) {
         ProductLine productLine = productLineRepo.findById(id).orElse(null);
