@@ -2,7 +2,6 @@ package kigali.blueband.rw.controller;
 
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +15,13 @@ import kigali.blueband.rw.service.DashboardService;
 @RequestMapping(value = "/api/dashboard")
 public class DashboardController {
 
-    @Autowired
-    private DashboardService dashboardService;
+    private final DashboardService dashboardService;
 
-    // Collects the main numbers of the system.
+    public DashboardController(DashboardService dashboardService) {
+        this.dashboardService = dashboardService;
+    }
+
+    // Returns the system's summary metrics for the dashboard.
     @GetMapping(value = "/summary", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getSummary() {
         Map<String, Long> summary = dashboardService.getSummary();
