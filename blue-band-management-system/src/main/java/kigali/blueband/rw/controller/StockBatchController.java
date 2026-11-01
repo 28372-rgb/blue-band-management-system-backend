@@ -3,7 +3,6 @@ package kigali.blueband.rw.controller;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +22,11 @@ import kigali.blueband.rw.service.StockBatchService;
 @RequestMapping(value = "/api/stock-batches")
 public class StockBatchController {
 
-    @Autowired
-    private StockBatchService stockBatchService;
+    private final StockBatchService stockBatchService;
+
+    public StockBatchController(StockBatchService stockBatchService) {
+        this.stockBatchService = stockBatchService;
+    }
 
     // Saves a stock batch for a delivered supply order.
     @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_VALUE,

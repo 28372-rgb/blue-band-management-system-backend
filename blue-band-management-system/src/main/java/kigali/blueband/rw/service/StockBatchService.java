@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import kigali.blueband.rw.domain.StockBatch;
@@ -16,11 +15,15 @@ import kigali.blueband.rw.repository.SupplyOrderRepository;
 @Service
 public class StockBatchService {
 
-    @Autowired
-    private StockBatchRepository stockBatchRepo;
+    private final StockBatchRepository stockBatchRepo;
+    private final SupplyOrderRepository supplyOrderRepo;
 
-    @Autowired
-    private SupplyOrderRepository supplyOrderRepo;
+    public StockBatchService(
+            StockBatchRepository stockBatchRepo,
+            SupplyOrderRepository supplyOrderRepo) {
+        this.stockBatchRepo = stockBatchRepo;
+        this.supplyOrderRepo = supplyOrderRepo;
+    }
 
     // Saves a stock batch for a delivered supply order.
     public String saveStockBatch(UUID supplyOrderId, StockBatch stockBatch) {
@@ -46,7 +49,7 @@ public class StockBatchService {
         return stockBatchRepo.findAll();
     }
 
-    // Returns the stock batches of a retailer, newest first.
+    // Returns a retailer's stock batches, newest first.
     public List<StockBatch> getStockBatchesByRetailer(String shopCode) {
         return stockBatchRepo.findHistoryByShopCode(shopCode);
     }

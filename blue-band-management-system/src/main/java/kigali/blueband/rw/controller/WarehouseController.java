@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +23,11 @@ import kigali.blueband.rw.service.WarehouseService;
 @RequestMapping(value = "/api/warehouses")
 public class WarehouseController {
 
-    @Autowired
-    private WarehouseService warehouseService;
+    private final WarehouseService warehouseService;
+
+    public WarehouseController(WarehouseService warehouseService) {
+        this.warehouseService = warehouseService;
+    }
 
     // Saves a warehouse if its number is not used yet.
     @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_VALUE,

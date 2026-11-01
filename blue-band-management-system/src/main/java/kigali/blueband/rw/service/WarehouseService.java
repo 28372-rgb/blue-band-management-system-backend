@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import kigali.blueband.rw.domain.Warehouse;
@@ -14,11 +13,15 @@ import kigali.blueband.rw.repository.WarehouseRepository;
 @Service
 public class WarehouseService {
 
-    @Autowired
-    private WarehouseRepository warehouseRepo;
+    private final WarehouseRepository warehouseRepo;
+    private final DistributorRepository distributorRepo;
 
-    @Autowired
-    private DistributorRepository distributorRepo;
+    public WarehouseService(
+            WarehouseRepository warehouseRepo,
+            DistributorRepository distributorRepo) {
+        this.warehouseRepo = warehouseRepo;
+        this.distributorRepo = distributorRepo;
+    }
 
     // Saves a warehouse if its number is not used yet.
     public String saveWarehouse(Warehouse warehouse) {
@@ -40,7 +43,7 @@ public class WarehouseService {
         return warehouseRepo.findById(id);
     }
 
-    // Returns the warehouses that no distributor occupies.
+    // Returns warehouses that are not assigned to a distributor.
     public List<Warehouse> getFreeWarehouses() {
         return warehouseRepo.findFreeWarehouses();
     }
