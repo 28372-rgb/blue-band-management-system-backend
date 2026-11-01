@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,8 +31,11 @@ import kigali.blueband.rw.service.SupplyOrderService;
 @RequestMapping(value = "/api/supply-orders")
 public class SupplyOrderController {
 
-    @Autowired
-    private SupplyOrderService supplyOrderService;
+    private final SupplyOrderService supplyOrderService;
+
+    public SupplyOrderController(SupplyOrderService supplyOrderService) {
+        this.supplyOrderService = supplyOrderService;
+    }
 
     // Saves a supply order after checking the date and the distributor.
     @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -165,7 +167,7 @@ public class SupplyOrderController {
         return new ResponseEntity<>(returnedMessage, HttpStatus.OK);
     }
 
-    // Cancels the orders of an absent distributor for one day.
+    // Cancels a distributor's orders for a specific day.
     @PatchMapping(value = "/cancel-day")
     public ResponseEntity<?> cancelDay(
             @RequestParam UUID distributorId, @RequestParam String date) {

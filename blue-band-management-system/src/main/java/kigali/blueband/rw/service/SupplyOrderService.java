@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,17 +23,21 @@ import kigali.blueband.rw.repository.SupplyOrderRepository;
 @Service
 public class SupplyOrderService {
 
-    @Autowired
-    private SupplyOrderRepository supplyOrderRepo;
+    private final SupplyOrderRepository supplyOrderRepo;
+    private final RetailerRepository retailerRepo;
+    private final DistributorRepository distributorRepo;
+    private final StockBatchRepository stockBatchRepo;
 
-    @Autowired
-    private RetailerRepository retailerRepo;
-
-    @Autowired
-    private DistributorRepository distributorRepo;
-
-    @Autowired
-    private StockBatchRepository stockBatchRepo;
+    public SupplyOrderService(
+            SupplyOrderRepository supplyOrderRepo,
+            RetailerRepository retailerRepo,
+            DistributorRepository distributorRepo,
+            StockBatchRepository stockBatchRepo) {
+        this.supplyOrderRepo = supplyOrderRepo;
+        this.retailerRepo = retailerRepo;
+        this.distributorRepo = distributorRepo;
+        this.stockBatchRepo = stockBatchRepo;
+    }
 
     // Saves a supply order after checking the date and the distributor.
     public String saveSupplyOrder(SupplyOrder supplyOrder) {
@@ -94,7 +97,7 @@ public class SupplyOrderService {
         return supplyOrderRepo.findByStatusOrderByOrderDateAsc(status);
     }
 
-    // Returns the supply orders between two dates.
+    // Returns supply orders within a date range.
     public List<SupplyOrder> getSupplyOrdersBetween(LocalDate start, LocalDate end) {
         return supplyOrderRepo.findByOrderDateBetweenOrderByOrderDateAsc(start, end);
     }
@@ -180,12 +183,12 @@ public class SupplyOrderService {
         return "Supply order deleted successfully";
     }
 
-    // Number of supply orders of each status.
+    // Counts supply orders by status.
     public List<Object[]> countSupplyOrdersByStatus() {
         return supplyOrderRepo.countSupplyOrdersByStatus();
     }
 
-    // Cancels the orders of a distributor for a day, except the delivered ones.
+    // Cancels a distributor's orders for a day, except delivered orders.
     @Transactional
     public int cancelDistributorOrdersForDay(UUID distributorId, LocalDate date) {
         return supplyOrderRepo.cancelDistributorOrdersForDay(distributorId, date);

@@ -18,32 +18,32 @@ import kigali.blueband.rw.domain.SupplyStatus;
 @Repository
 public interface SupplyOrderRepository extends JpaRepository<SupplyOrder, UUID> {
 
-    // Supply orders of a status, earliest date first.
+    // Returns supply orders with the given status, earliest date first.
     List<SupplyOrder> findByStatusOrderByOrderDateAsc(SupplyStatus status);
 
-    // Supply orders between two dates.
+    // Returns supply orders within a date range.
     List<SupplyOrder> findByOrderDateBetweenOrderByOrderDateAsc(LocalDate start, LocalDate end);
 
-    // Checks if the distributor has an order on that date that is not cancelled.
+    // Checks whether the distributor has an order on that date that is not cancelled.
     boolean existsByDistributorAndOrderDateAndStatusNot(Distributor distributor, LocalDate orderDate, SupplyStatus status);
 
-    // Checks if the distributor has supply orders.
+    // Checks whether the distributor has supply orders.
     boolean existsByDistributor(Distributor distributor);
 
-    // Checks if the retailer has supply orders.
+    // Checks whether the retailer has supply orders.
     boolean existsByRetailer(Retailer retailer);
 
-    // Number of supply orders of a date.
+    // Counts supply orders for a given date.
     long countByOrderDate(LocalDate orderDate);
 
-    // Number of supply orders of a status.
+    // Counts supply orders with the given status.
     long countByStatus(SupplyStatus status);
 
-    // Number of supply orders of each status.
+    // Counts supply orders by status.
     @Query("SELECT o.status, COUNT(o) FROM SupplyOrder o GROUP BY o.status")
     List<Object[]> countSupplyOrdersByStatus();
 
-    // Cancels the orders of a distributor for a day, except the delivered ones.
+    // Cancels a distributor's orders for a day, except delivered orders.
     @Modifying
     @Query("UPDATE SupplyOrder o SET o.status = kigali.blueband.rw.domain.SupplyStatus.CANCELLED WHERE o.distributor.id = :distributorId AND o.orderDate = :date AND o.status <> kigali.blueband.rw.domain.SupplyStatus.DELIVERED")
     int cancelDistributorOrdersForDay(@Param("distributorId") UUID distributorId, @Param("date") LocalDate date);
