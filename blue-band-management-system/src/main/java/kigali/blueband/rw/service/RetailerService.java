@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import kigali.blueband.rw.domain.Retailer;
@@ -15,14 +14,18 @@ import kigali.blueband.rw.repository.SupplyOrderRepository;
 @Service
 public class RetailerService {
 
-    @Autowired
-    private RetailerRepository retailerRepo;
+    private final RetailerRepository retailerRepo;
+    private final DistributorRepository distributorRepo;
+    private final SupplyOrderRepository supplyOrderRepo;
 
-    @Autowired
-    private DistributorRepository distributorRepo;
-
-    @Autowired
-    private SupplyOrderRepository supplyOrderRepo;
+    public RetailerService(
+            RetailerRepository retailerRepo,
+            DistributorRepository distributorRepo,
+            SupplyOrderRepository supplyOrderRepo) {
+        this.retailerRepo = retailerRepo;
+        this.distributorRepo = distributorRepo;
+        this.supplyOrderRepo = supplyOrderRepo;
+    }
 
     // Saves a retailer if its shop code is new.
     public String saveRetailer(Retailer retailer) {
@@ -44,7 +47,7 @@ public class RetailerService {
         return retailerRepo.findById(id);
     }
 
-    // Finds the retailers of an owner, ignoring letter case.
+    // Returns an owner's retailers, ignoring letter case.
     public List<Retailer> getRetailersByOwnerName(String ownerName) {
         return retailerRepo.findByOwnerNameIgnoreCaseOrderByShopNameAsc(ownerName);
     }

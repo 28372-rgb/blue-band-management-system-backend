@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +24,11 @@ import kigali.blueband.rw.service.RetailerService;
 @RequestMapping(value = "/api/retailers")
 public class RetailerController {
 
-    @Autowired
-    private RetailerService retailerService;
+    private final RetailerService retailerService;
+
+    public RetailerController(RetailerService retailerService) {
+        this.retailerService = retailerService;
+    }
 
     // Saves a retailer if its shop code is new.
     @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_VALUE,
