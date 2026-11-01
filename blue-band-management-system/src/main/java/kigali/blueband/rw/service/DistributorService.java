@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -21,17 +20,21 @@ import kigali.blueband.rw.repository.WarehouseRepository;
 @Service
 public class DistributorService {
 
-    @Autowired
-    private DistributorRepository distributorRepo;
+    private final DistributorRepository distributorRepo;
+    private final WarehouseRepository warehouseRepo;
+    private final ProductLineRepository productLineRepo;
+    private final SupplyOrderRepository supplyOrderRepo;
 
-    @Autowired
-    private WarehouseRepository warehouseRepo;
-
-    @Autowired
-    private ProductLineRepository productLineRepo;
-
-    @Autowired
-    private SupplyOrderRepository supplyOrderRepo;
+    public DistributorService(
+            DistributorRepository distributorRepo,
+            WarehouseRepository warehouseRepo,
+            ProductLineRepository productLineRepo,
+            SupplyOrderRepository supplyOrderRepo) {
+        this.distributorRepo = distributorRepo;
+        this.warehouseRepo = warehouseRepo;
+        this.productLineRepo = productLineRepo;
+        this.supplyOrderRepo = supplyOrderRepo;
+    }
 
     // Saves a distributor and links its warehouse and product lines.
     public String saveDistributor(Distributor distributor) {

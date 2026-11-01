@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +25,11 @@ import kigali.blueband.rw.service.DistributorService;
 @RequestMapping(value = "/api/distributors")
 public class DistributorController {
 
-    @Autowired
-    private DistributorService distributorService;
+    private final DistributorService distributorService;
+
+    public DistributorController(DistributorService distributorService) {
+        this.distributorService = distributorService;
+    }
 
     // Saves a distributor and links its warehouse and product lines.
     @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_VALUE,
